@@ -2,5 +2,6 @@
 {
     public class SamuraiUpdateDTO
     {
+        public string? Name { get; set; }
     }
 }

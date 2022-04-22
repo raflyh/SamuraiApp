@@ -10,7 +10,8 @@ namespace SamuraiApp.Data.Interface
     {
         Task<IEnumerable<T>> GetAll();
         Task<T> GetById(int id);
-        Task<T> GetById(int id, T obj);
+        Task<T> GetSamurai(int id);
+        Task<T> GetSamuraiElemen(int id);
         Task<T> Insert(T obj);
         Task<T> Update(int id, T obj);
         Task Delete(int id);

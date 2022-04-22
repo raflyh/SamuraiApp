@@ -47,12 +47,23 @@ namespace SamuraiApp.Data
             if (result == null) throw new Exception($"Data Samurai Id: {id} tidak ditemukan");
             return result;
         }
-
-        public Task<Samurai> GetById(int id, Samurai obj)
+        //Get Samurai with Katana
+        public async Task<Samurai> GetSamurai(int id)
         {
-            throw new NotImplementedException();
+            var result = await _context.Samurais.Include(x => x.Katanas).FirstOrDefaultAsync(s => s.Id == id);
+            if (result == null) throw new Exception($"Data Samurai Id: {id} tidak ditemukan");
+            return result;
         }
-
+        //Get Samurai with Katana and Elemen
+        public async Task<Samurai> GetSamuraiElemen(int id)
+        {
+            var result = await _context.Samurais
+                .Include(x => x.Katanas)
+                    .ThenInclude(a => a.Elemens)
+                .FirstOrDefaultAsync(s => s.Id == id);
+            if (result == null) throw new Exception($"Data Samurai Id: {id} tidak ditemukan");
+            return result;
+        }
         public async Task<Katana> GetKatanaById(int id)
         {
             var result = await _context.Katanas.FirstOrDefaultAsync(s => s.Id == id);
@@ -64,8 +75,8 @@ namespace SamuraiApp.Data
         {
             try
             {
-                _context.Samurais.Add(obj);
-                _context.SaveChangesAsync();
+                await _context.Samurais.AddAsync(obj);
+                await _context.SaveChangesAsync();
                 return obj;
             }
             catch (DbUpdateConcurrencyException dbEx)
@@ -77,7 +88,7 @@ namespace SamuraiApp.Data
                 throw new Exception(ex.Message);
             }
         }
-
+        //Insert Katana
         public async Task<Katana> Insert(Katana obj)
         {
             try
@@ -114,25 +125,34 @@ namespace SamuraiApp.Data
                 throw new Exception(ex.Message);
             }
         }
-        public async Task<Katana> InsertElemen(Katana obj)
+        //Insert Elemen
+        public async Task<Elemen> Insert(Elemen obj)
+        {
+            try
+            {  
+                await _context.Elemens.AddAsync(obj);
+                await _context.SaveChangesAsync();
+
+                return obj;
+            }
+            catch (DbUpdateConcurrencyException dbEx)
+            {
+                throw new Exception(dbEx.Message);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        //Insert IntermediateTable
+        public async Task<ElemenKatana> Insert(ElemenKatana obj)
         {
             try
             {
-                var katana = new Katana()
-                {
-                    Id = obj.Id,
-                    Name = obj.Name,
-                    ForgedDate = obj.ForgedDate,
-                    Elemens = obj.Elemens.Select(s => new Elemen()
-                    {
-                        ElemenId = s.ElemenId,
-                        Name = s.Name,
-                    }).ToList()
-                };
-                await _context.Katanas.AddAsync(katana);
+                await _context.ElemenKatanas.AddAsync(obj);
                 await _context.SaveChangesAsync();
 
-                return katana;
+                return obj;
             }
             catch (DbUpdateConcurrencyException dbEx)
             {

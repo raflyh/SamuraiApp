@@ -11,5 +11,8 @@ namespace SamuraiApp.Data.Interface
     {
         Task<Katana> Insert(Katana obj);
         Task<Katana> GetKatanaById(int id);
+        Task<Elemen> Insert(Elemen obj);
+        Task<ElemenKatana> Insert(ElemenKatana obj);
+
     }
 }
