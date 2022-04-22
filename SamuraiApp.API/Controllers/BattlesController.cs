@@ -27,6 +27,10 @@ namespace SamuraiApp.API.Controllers
         public void Post([FromBody] string value)
         {
         }
+        [HttpPost("Body")]
+        public void PostBody([FromBody] string value)
+        {
+        }
 
         // PUT api/<BattlesController>/5
         [HttpPut("{id}")]
